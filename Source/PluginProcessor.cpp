@@ -16,7 +16,10 @@ public:
         using F = juce::AudioParameterFloat;
         using R = juce::NormalisableRange<float>;
         juce::AudioProcessorValueTreeState::ParameterLayout l;
-        l.add(std::make_unique<F>("effect", "Effect", R(0.f, 1.f, 0.001f), 0.5f));
+        l.add(std::make_unique<F>("effect", "Effect", R(0.f, 1.f, 0.001f), 0.5f,
+            juce::AudioParameterFloatAttributes()
+                .withStringFromValueFunction([](float v, int) { return juce::String(juce::roundToInt(v * 100.f)) + " %"; })
+                .withValueFromStringFunction([](const juce::String& t) { return t.getFloatValue() / 100.f; })));
         return l;
     }
 
