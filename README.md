@@ -1,7 +1,7 @@
 # LSA Flanger
 Flanger métal (feedback saturé) avec auto-pan lent gauche ↔ droite. VST3 + Standalone (JUCE).
 
-Paramètres : Flanger Rate, Depth, Feedback (négatif = plus métallique), Metal Drive, Mix, Pan Rate, Pan Depth.
+Un seul bouton **Effect** : à 0 % le signal est strictement inchangé, en montant on ajoute le flanger métal et le balancement gauche-droite (niveau sonore compensé).
 
 ## Obtenir le plugin (sans rien installer)
 1. Poussez ce dépôt sur GitHub, onglet **Actions → Build plugin** (gratuit).
@@ -11,4 +11,4 @@ Paramètres : Flanger Rate, Depth, Feedback (négatif = plus métallique), Metal
 ## Build local
 `cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release`
 
-Test du DSP : `g++ -std=c++17 test/test.cpp -o t && ./t`
+Tests DSP : `g++ -std=c++17 test/macro_test.cpp -o m && ./m` (niveau, stabilité, bypass exact à 0)

@@ -21,6 +21,8 @@ struct Params
     float mix       = 0.5f;   // dry/wet
     float panRateHz = 0.15f;  // slow left<->right movement
     float panDepth  = 0.8f;   // 0..1
+    float wetGain   = 1.0f;   // wet level compensation
+    float outGain   = 1.0f;   // output makeup
 };
 
 class FlangerCore
@@ -91,13 +93,13 @@ public:
 
         // dry/wet (equal-power)
         float wg = std::sin(cur.mix * 1.5707963f), dg = std::cos(cur.mix * 1.5707963f);
-        float o0 = dry[0] * dg + wet[0] * wg, o1 = dry[1] * dg + wet[1] * wg;
+        float o0 = dry[0] * dg + wet[0] * wg * cur.wetGain, o1 = dry[1] * dg + wet[1] * wg * cur.wetGain;
 
         // slow equal-power auto-pan
         float pos = cur.panDepth * (float) std::sin(twoPi * panPhase);
         float a = (pos + 1.0f) * 0.78539816f;
-        l = o0 * std::cos(a) * 1.41421356f;
-        r = o1 * std::sin(a) * 1.41421356f;
+        l = o0 * std::cos(a) * 1.41421356f * cur.outGain;
+        r = o1 * std::sin(a) * 1.41421356f * cur.outGain;
 
         flangerPhase += cur.rateHz / sr; if (flangerPhase >= 1.0) flangerPhase -= 1.0;
         panPhase += cur.panRateHz / sr;  if (panPhase >= 1.0) panPhase -= 1.0;
@@ -121,7 +123,7 @@ private:
         s(cur.rateHz, t.rateHz); s(cur.depth, t.depth); s(cur.baseMs, t.baseMs);
         s(cur.feedback, t.feedback); s(cur.drive, t.drive); s(cur.tone, t.tone);
         s(cur.shape, t.shape); s(cur.stereo, t.stereo); s(cur.mix, t.mix);
-        s(cur.panRateHz, t.panRateHz); s(cur.panDepth, t.panDepth);
+        s(cur.panRateHz, t.panRateHz); s(cur.panDepth, t.panDepth); s(cur.wetGain, t.wetGain); s(cur.outGain, t.outGain);
     }
 
     double sr = 44100.0, flangerPhase = 0.0, panPhase = 0.0;
